@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.member.dao.MemberDAO">
+
+	<select id="loginById" resultType="MemberDTO">
+		SELECT * FROM t_member WHERE id=#{id} AND pwd=#{pwd} 
+		
+	</select>
+	
+	<!-- <insert id="insertTodoList" parameterType="MemberDTO">
+	    INSERT INTO t_member(todoname) VALUES(#{todoname})
+	</insert>
+	 
+	<update id="updateTodoList" parameterType="int">
+	   UPDATE todolist SET completed = !completed WHERE id=#{id}
+	</update> -->
+	
+	
+	<delete id="deleteTodoList" parameterType="int">
+	    DELETE FROM todolist WHERE id=#{id}
+	</delete>
+ </mapper>    
+
+
+
+
+
+
