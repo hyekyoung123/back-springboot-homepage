@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,11 +26,21 @@ public class MemberController {
 		
 	}
 	
-	@GetMapping("/member/login")
-	public  Map<String, Boolean> loginCheck(@RequestBody MemberDTO memberDTO ) throws Exception {
-		boolean check = memberService.login(memberDTO) != null ? true : false;
-		Map<String, Boolean> map = new HashMap<String, Boolean>();
-		map.put("login", check);
+	@PostMapping("/member/login")
+	public  Map<String, Object> loginCheck(@RequestBody MemberDTO memberDTO ) throws Exception {
+		System.out.printf("%s %s \n", memberDTO.getId(), memberDTO.getPwd());
+		MemberDTO dto = memberService.login(memberDTO);
+		boolean check =  dto != null ? true : false;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("==================");
+		System.out.println(map);
+		map.put("userId", memberDTO.getId());
+		map.put("check", check);
+		if(check) {		  
+		    map.put("name", dto.getName());
+		}		
+		   
 		return map;
 	}
 }
