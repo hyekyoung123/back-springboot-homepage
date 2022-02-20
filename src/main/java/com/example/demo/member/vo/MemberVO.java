@@ -1,19 +1,19 @@
-package com.example.demo.member.dto;
+package com.example.demo.member.vo;
 
 import java.sql.Date;
 
-public class MemberDTO {
+public class MemberVO {
 	private String id;
 	private String pwd;
 	private String name;
 	private String email;
 	private Date joinDate;
 
-	public MemberDTO() {
+	public MemberVO() {
 		
 	}
 
-	public MemberDTO(String id, String pwd, String name, String email) {
+	public MemberVO(String id, String pwd, String name, String email) {
 		this.id = id;
 		this.pwd = pwd;
 		this.name = name;

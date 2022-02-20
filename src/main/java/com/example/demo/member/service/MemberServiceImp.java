@@ -7,7 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.member.dao.MemberDAO;
-import com.example.demo.member.dto.MemberDTO;
+import com.example.demo.member.vo.MemberVO;
 
 
 @Service
@@ -26,7 +26,7 @@ public class MemberServiceImp implements MemberService {
 	}
 
 	@Override
-	public int addMember(MemberDTO memberVO) throws DataAccessException {
+	public int addMember(MemberVO memberVO) throws DataAccessException {
 		return 0;
 	}
 
@@ -36,7 +36,7 @@ public class MemberServiceImp implements MemberService {
 	}
 
 	@Override
-	public MemberDTO login(MemberDTO memberVO) throws Exception {
+	public MemberVO login(MemberVO memberVO) throws Exception {
 		
 		return memberDAO.loginById(memberVO);
 	}

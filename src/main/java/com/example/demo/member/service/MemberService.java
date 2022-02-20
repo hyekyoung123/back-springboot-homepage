@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 
-import com.example.demo.member.dto.MemberDTO;
+import com.example.demo.member.vo.MemberVO;
 
 public interface MemberService {
 	 public List listMembers() throws DataAccessException;
-	 public int addMember(MemberDTO memberVO) throws DataAccessException;
+	 public int addMember(MemberVO memberVO) throws DataAccessException;
 	 public int removeMember(String id) throws DataAccessException;
-	 public MemberDTO login(MemberDTO memberVO) throws Exception;
+	 public MemberVO login(MemberVO memberVO) throws Exception;
 }

@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.demo.member.dao.MemberDAO">
 
-	<select id="loginById" resultType="MemberDTO">
+	<select id="loginById" resultType="MemberVO">
 		SELECT * FROM t_member WHERE id=#{id} AND pwd=#{pwd} 
 		
 	</select>
