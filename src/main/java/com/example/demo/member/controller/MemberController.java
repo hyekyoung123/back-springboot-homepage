@@ -9,14 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.member.service.MemberService;
 import com.example.demo.member.vo.MemberVO;
 
+// RestController = Controller + ResponseBody
+
 @CrossOrigin("*")
 //@CrossOrigin(origins = "http://localhost:3000") //해당 리액트 포트 번호.
-@RestController
+@ RestController
 public class MemberController {
 	
 	@Autowired
@@ -26,15 +30,14 @@ public class MemberController {
 		
 	}
 	
+	//@RequestMapping(value="/member/login", method=RequestMethod.POST)
 	@PostMapping("/member/login")
 	public  Map<String, Object> loginCheck(@RequestBody MemberVO memberDTO ) throws Exception {
 		System.out.printf("%s %s \n", memberDTO.getId(), memberDTO.getPwd());
 		MemberVO dto = memberService.login(memberDTO);
 		boolean success =  dto != null ? true : false;
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println("==================");
-		
+		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("userId", memberDTO.getId());
 		map.put("success", success);
 		if(success) {		  
