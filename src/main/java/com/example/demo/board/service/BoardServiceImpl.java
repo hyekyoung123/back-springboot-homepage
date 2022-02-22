@@ -3,6 +3,7 @@ package com.example.demo.board.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileSystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,7 +32,11 @@ public class BoardServiceImpl implements BoardService{
 	//단일 이미지 추가하기
 		@Override
 		public int addNewArticle(Map articleMap) throws Exception{
-			return boardDAO.insertNewArticle(articleMap);
+			int articleNO = boardDAO.selectNewArticleNO();
+			articleMap.put("articleNO", articleNO);
+			boardDAO.insertNewArticle(articleMap);
+			return articleNO;
+			
 		}
 		
 		 //다중 이미지 추가하기
@@ -61,7 +66,10 @@ public class BoardServiceImpl implements BoardService{
 		 //단일 파일 보이기
 		@Override
 		public ArticleVO viewArticle(int articleNO) throws Exception {
+			System.out.println("articleNo:" + articleNO);
 			ArticleVO articleVO = boardDAO.selectArticle(articleNO);
+			
+			System.out.println(articleVO);
 			return articleVO;
 		}
 		

@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +37,7 @@ import com.example.demo.member.vo.MemberVO;
 
 @CrossOrigin("*")
 @RestController("boardController")
+//@Controller("boardController")
 public class BoardControllerImpl implements BoardController{
 	private static final String ARTICLE_IMAGE_REPO = "C:\\spring\\board\\article_image";
 	@Autowired
@@ -50,6 +52,7 @@ public class BoardControllerImpl implements BoardController{
 	//@RequestMapping(value="/board/listArticles", method = {RequestMethod.GET, RequestMethod.POST})
 	//@ResponseBody	
 	@GetMapping(value="/board/listArticles")
+	@PostMapping(value="/board/listArticles")
 	public List<ArticleVO> listArticles(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	  
 		List<ArticleVO> articlesList = boardService.listArticles();	
@@ -76,52 +79,49 @@ public class BoardControllerImpl implements BoardController{
 	@Override
 	//@RequestMapping(value = "/board/addNewArticle.do", method = RequestMethod.POST)
 	//@ResponseBody
-	@GetMapping(value = "/board/addNewArticle.do")
+	@PostMapping(value = "/board/addNewArticle")
 	public ResponseEntity addNewArticle(MultipartHttpServletRequest multipartRequest, HttpServletResponse response)
 			throws Exception {
+		
 		multipartRequest.setCharacterEncoding("utf-8");
 		Map<String, Object> articleMap = new HashMap<String, Object>();
 		Enumeration enu = multipartRequest.getParameterNames();
 		while (enu.hasMoreElements()) {
+			
 			String name = (String) enu.nextElement();
 			String value = multipartRequest.getParameter(name);
+			System.out.printf("%s %s\n", name, value);			
 			articleMap.put(name, value);
 		}
 
 		String imageFileName = upload(multipartRequest);
-		HttpSession session = multipartRequest.getSession();
-		MemberVO memberVO = (MemberVO) session.getAttribute("member");
-		String id = memberVO.getId();
+		//HttpSession session = multipartRequest.getSession();
+		//MemberVO memberVO = (MemberVO) session.getAttribute("member");
+		//String id = memberVO.getId();
 		articleMap.put("parentNO", 0);
-		articleMap.put("id", id);
+		//articleMap.put("id", id);
 		articleMap.put("imageFileName", imageFileName);
 
-		String message;
+		Map<String, String> map = new HashMap<String, String>();
 		ResponseEntity resEnt = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 		try {
 			int articleNO = boardService.addNewArticle(articleMap);
 			if (imageFileName != null && imageFileName.length() != 0) {
 				File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
 				File destDir = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
 				FileUtils.moveFileToDirectory(srcFile, destDir, true);
-			}
-
-			message = "<script>";
-			message += " alert('새글을 추가했습니다.');";
-			message += " location.href='" + multipartRequest.getContextPath() + "/board/listArticles.do'; ";
-			message += " </script>";
-			resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+			}            
+			map.put("message", "새글을 추가했습니다.");
+			map.put("path", "/board/listArticles");
+			resEnt = new ResponseEntity(map, responseHeaders, HttpStatus.CREATED);
 		} catch (Exception e) {
 			File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
 			srcFile.delete();
-
-			message = " <script>";
-			message += " alert('오류가 발생했습니다. 다시 시도해 주세요');');";
-			message += " location.href='" + multipartRequest.getContextPath() + "/board/articleForm.do'; ";
-			message += " </script>";
-			resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+			map.put("message", "오류가 발생했습니다. 다시 시도해 주세요.");
+			map.put("path", "/board/articleForm");			
+			resEnt = new ResponseEntity(map, responseHeaders, HttpStatus.CREATED) ;
 			e.printStackTrace();
 		}
 		return resEnt;
@@ -129,15 +129,12 @@ public class BoardControllerImpl implements BoardController{
 		
 		
 		//한개의 이미지 보여주기
-		@RequestMapping(value="/board/viewArticle.do" ,method = RequestMethod.GET)
-		public ModelAndView viewArticle(@RequestParam("articleNO") int articleNO,
-	                                    HttpServletRequest request, HttpServletResponse response) throws Exception{
-			String viewName = (String)request.getAttribute("viewName");
-			articleVO=boardService.viewArticle(articleNO);
-			ModelAndView mav = new ModelAndView();
-			mav.setViewName(viewName);
-			mav.addObject("article", articleVO);
-			return mav;
+		//@RequestMapping(value="/board/viewArticle" ,method = RequestMethod.GET)
+	    @GetMapping(value="/board/viewArticle")
+		public ArticleVO viewArticle(@RequestParam("articleNO") int articleNO,
+	                                  HttpServletRequest request, HttpServletResponse response) throws Exception{
+							
+			return boardService.viewArticle(articleNO);
 		}
 		
 		/*
@@ -158,7 +155,7 @@ public class BoardControllerImpl implements BoardController{
 		
 	  //한 개 이미지 수정 기능
 	  @Override
-	  @RequestMapping(value="/board/modArticle.do" ,method = RequestMethod.POST)
+	  @RequestMapping(value="/board/modArticle" ,method = RequestMethod.POST)
 	  @ResponseBody
 	  public ResponseEntity modArticle(MultipartHttpServletRequest multipartRequest,  
 	    HttpServletResponse response) throws Exception{
@@ -208,7 +205,7 @@ public class BoardControllerImpl implements BoardController{
 	  }
 	  
 	  @Override
-	  @RequestMapping(value="/board/removeArticle.do" ,method = RequestMethod.POST)
+	  @RequestMapping(value="/board/removeArticle" ,method = RequestMethod.POST)
 	  @ResponseBody
 	  public ResponseEntity  removeArticle(@RequestParam("articleNO") int articleNO,
 	                              HttpServletRequest request, HttpServletResponse response) throws Exception{
