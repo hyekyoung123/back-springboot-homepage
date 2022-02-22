@@ -9,17 +9,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-
-@Controller
+@CrossOrigin("*")
+@RestController
 public class FileDownloadController {
 	private static final String ARTICLE_IMAGE_REPO = "C:\\spring\\board\\article_image";
-	@RequestMapping("/download.do")
+	//@RequestMapping("/download")
+	@GetMapping("/download")
 	protected void download(@RequestParam("imageFileName") String imageFileName,
 							@RequestParam("articleNO") String articleNO,
 			                 HttpServletResponse response)throws Exception {
+		System.out.println("dddd:" + imageFileName + "  " + articleNO);
 		OutputStream out = response.getOutputStream();
 		String downFile = ARTICLE_IMAGE_REPO + "\\" +articleNO+"\\"+ imageFileName;
 		File file = new File(downFile);
