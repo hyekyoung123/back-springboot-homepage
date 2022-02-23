@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
-@RestController
+@Controller
 public class FileDownloadController {
 	private static final String ARTICLE_IMAGE_REPO = "C:\\spring\\board\\article_image";
 	//@RequestMapping("/download")
@@ -24,9 +24,10 @@ public class FileDownloadController {
 	protected void download(@RequestParam("imageFileName") String imageFileName,
 							@RequestParam("articleNO") String articleNO,
 			                 HttpServletResponse response)throws Exception {
-		System.out.println("dddd:" + imageFileName + "  " + articleNO);
+		//System.out.println("dddd:" + imageFileName + "  " + articleNO);
 		OutputStream out = response.getOutputStream();
 		String downFile = ARTICLE_IMAGE_REPO + "\\" +articleNO+"\\"+ imageFileName;
+		System.out.println("downFile: " + downFile);
 		File file = new File(downFile);
 
 		response.setHeader("Cache-Control", "no-cache");

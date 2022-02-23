@@ -18,8 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -155,8 +158,9 @@ public class BoardControllerImpl implements BoardController{
 		
 	  //한 개 이미지 수정 기능
 	  @Override
-	  @RequestMapping(value="/board/modArticle" ,method = RequestMethod.POST)
-	  @ResponseBody
+	  //@RequestMapping(value="/board/modArticle" ,method = RequestMethod.POST)
+	  //@ResponseBody
+	  @PutMapping("/board/modArticle")
 	  public ResponseEntity modArticle(MultipartHttpServletRequest multipartRequest,  
 	    HttpServletResponse response) throws Exception{
 	    multipartRequest.setCharacterEncoding("utf-8");
@@ -172,10 +176,13 @@ public class BoardControllerImpl implements BoardController{
 		articleMap.put("imageFileName", imageFileName);
 		
 		String articleNO=(String)articleMap.get("articleNO");
-		String message;
+		Map<String, String> map= new HashMap<String, String>();
+		
+		System.out.println("===========");
+		System.out.println(articleMap);
 		ResponseEntity resEnt=null;
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 	    try {
 	       boardService.modArticle(articleMap);
 	       if(imageFileName!=null && imageFileName.length()!=0) {
@@ -187,52 +194,66 @@ public class BoardControllerImpl implements BoardController{
 	         File oldFile = new File(ARTICLE_IMAGE_REPO+"\\"+articleNO+"\\"+originalFileName);
 	         oldFile.delete();
 	       }	
-	       message = "<script>";
-		   message += " alert('글을 수정했습니다.');";
-		   message += " location.href='"+multipartRequest.getContextPath()+"/board/viewArticle.do?articleNO="+articleNO+"';";
-		   message +=" </script>";
-	       resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+	       //message = "<script>";
+		   //message += " alert('글을 수정했습니다.');";
+		   //message += " location.href='"+multipartRequest.getContextPath()+"/board/viewArticle.do?articleNO="+articleNO+"';";
+		   //message +=" </script>";	       
+	       // resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+	       map.put("message", "글을 수정했습니다.");
+	       map.put("path","/board/viewArticle/"+articleNO);
+	      
 	    }catch(Exception e) {
 	      File srcFile = new File(ARTICLE_IMAGE_REPO+"\\"+"temp"+"\\"+imageFileName);
 	      srcFile.delete();
-	      message = "<script>";
-		  message += " alert('오류가 발생했습니다.다시 수정해주세요');";
-		  message += " location.href='"+multipartRequest.getContextPath()+"/board/viewArticle.do?articleNO="+articleNO+"';";
-		  message +=" </script>";
-	      resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+	      //message = "<script>";
+		  //message += " alert('오류가 발생했습니다.다시 수정해주세요');";
+		  //message += " location.href='"+multipartRequest.getContextPath()+"/board/viewArticle.do?articleNO="+articleNO+"';";
+		  //message +=" </script>";
+	      //resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+	       map.put("message", "오류가 발생했습니다.다시 수정해주세요");
+	       map.put("path","/board/viewArticle/"+articleNO);	       
 	    }
+	    resEnt = new ResponseEntity(map, responseHeaders, HttpStatus.CREATED);
 	    return resEnt;
 	  }
 	  
 	  @Override
-	  @RequestMapping(value="/board/removeArticle" ,method = RequestMethod.POST)
-	  @ResponseBody
+	  //@RequestMapping(value="/board/removeArticle" ,method = RequestMethod.POST)
+	  //@ResponseBody
+	  @DeleteMapping("/board/removeArticle")
 	  public ResponseEntity  removeArticle(@RequestParam("articleNO") int articleNO,
 	                              HttpServletRequest request, HttpServletResponse response) throws Exception{
-		response.setContentType("text/html; charset=UTF-8");
+		//response.setContentType("application/json; charset=UTF-8");
 		String message;
 		ResponseEntity resEnt=null;
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		System.out.println("articleNO:" + articleNO);
+		responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			boardService.removeArticle(articleNO);
-			File destDir = new File(ARTICLE_IMAGE_REPO+"\\"+articleNO);
+			File destDir = new File(ARTICLE_IMAGE_REPO+"\\"+articleNO);			
 			FileUtils.deleteDirectory(destDir);
 			
-			message = "<script>";
-			message += " alert('글을 삭제했습니다.');";
-			message += " location.href='"+request.getContextPath()+"/board/listArticles.do';";
-			message +=" </script>";
-		    resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
-		       
+			//message = "<script>";
+			//message += " alert('글을 삭제했습니다.');";
+			//message += " location.href='"+request.getContextPath()+"/board/listArticles.do';";
+			//message +=" </script>";
+		   // resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+		       map.put("message", "글을 삭제했습니다.");
+		      
 		}catch(Exception e) {
-			message = "<script>";
-			message += " alert('작업중 오류가 발생했습니다.다시 시도해 주세요.');";
-			message += " location.href='"+request.getContextPath()+"/board/listArticles.do';";
-			message +=" </script>";
-		    resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+			//message = "<script>";
+			//message += " alert('작업중 오류가 발생했습니다.다시 시도해 주세요.');";
+			//message += " location.href='"+request.getContextPath()+"/board/listArticles.do';";
+			//message +=" </script>";
+		    //resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+			 map.put("message", "작업중 오류가 발생했습니다.다시 시도해 주세요.");
+		     
 		    e.printStackTrace();
 		}
+		map.put("path", "/board/list");
+		resEnt = new ResponseEntity(map, responseHeaders, HttpStatus.CREATED);
 		return resEnt;
 	  }  
 	  
