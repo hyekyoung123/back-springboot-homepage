@@ -114,7 +114,7 @@ public class BoardControllerImpl implements BoardController{
 				FileUtils.moveFileToDirectory(srcFile, destDir, true);
 			}            
 			map.put("message", "새글을 추가했습니다.");
-			map.put("path", "/board/listArticles");
+			map.put("path", "/board/list");
 			resEnt = new ResponseEntity(map, responseHeaders, HttpStatus.CREATED);
 		} catch (Exception e) {
 			File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);

@@ -35,8 +35,7 @@ public class BoardServiceImpl implements BoardService{
 			int articleNO = boardDAO.selectNewArticleNO();
 			articleMap.put("articleNO", articleNO);
 			boardDAO.insertNewArticle(articleMap);
-			return articleNO;
-			
+			return articleNO;			
 		}
 		
 		 //다중 이미지 추가하기
@@ -66,9 +65,7 @@ public class BoardServiceImpl implements BoardService{
 		 //단일 파일 보이기
 		@Override
 		public ArticleVO viewArticle(int articleNO) throws Exception {
-			System.out.println("articleNo:" + articleNO);
-			ArticleVO articleVO = boardDAO.selectArticle(articleNO);
-			
+			ArticleVO articleVO = boardDAO.selectArticle(articleNO);			
 			System.out.println(articleVO);
 			return articleVO;
 		}
