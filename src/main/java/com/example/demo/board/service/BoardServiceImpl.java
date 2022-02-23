@@ -85,7 +85,10 @@ public class BoardServiceImpl implements BoardService{
 		//답글 쓰기
 		@Override
 		public int replyNewArticle(Map articleMap) throws Exception{
-			return boardDAO.insertReplyArticle(articleMap);
+			int articleNO = boardDAO.selectNewArticleNO();
+			articleMap.put("articleNO", articleNO);
+			boardDAO.insertReplyArticle(articleMap);
+			return articleNO;
 		}
 	 
 }

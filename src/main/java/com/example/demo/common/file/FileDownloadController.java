@@ -21,8 +21,8 @@ public class FileDownloadController {
 	private static final String ARTICLE_IMAGE_REPO = "C:\\spring\\board\\article_image";
 	//@RequestMapping("/download")
 	@GetMapping("/download")
-	protected void download(@RequestParam("imageFileName") String imageFileName,
-							@RequestParam("articleNO") String articleNO,
+	protected void download(@RequestParam("articleNO") String articleNO,@RequestParam("imageFileName") String imageFileName,
+							
 			                 HttpServletResponse response)throws Exception {
 		//System.out.println("dddd:" + imageFileName + "  " + articleNO);
 		OutputStream out = response.getOutputStream();
