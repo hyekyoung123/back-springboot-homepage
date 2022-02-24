@@ -404,7 +404,7 @@ public class BoardControllerImpl implements BoardController {
 			// "/board/listArticles.do'; ";
 			// message += " </script>";
 			// resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
-			map.put("message", "새글을 추가했습니다.");
+			map.put("message", "새 답변을 추가했습니다.");
 			map.put("path", "/board/list");
 		} catch (Exception e) {
 			File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);

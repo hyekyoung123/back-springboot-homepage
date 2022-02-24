@@ -18,6 +18,8 @@ public class ArticleVO {
 	public ArticleVO() {
 	
 	}
+	
+	
 
 	public int getLevel() {
 		return level;
